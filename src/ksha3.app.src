@@ -3,8 +3,7 @@
   {description, "Keccak (SHA-3) hash function NIF"},
   {vsn, "1.0.0"},
   {modules, [
-             ksha3,
-             hex
+             ksha3
             ]},
   {registered, []},
   {applications, [
