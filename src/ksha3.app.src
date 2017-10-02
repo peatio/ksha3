@@ -1,9 +1,9 @@
-{application, sha3,
+{application, ksha3,
  [
   {description, "Keccak (SHA-3) hash function NIF"},
   {vsn, "1.0.0"},
   {modules, [
-             sha3,
+             ksha3,
              hex
             ]},
   {registered, []},
