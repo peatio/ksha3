@@ -1,31 +1,31 @@
--module(sha3_tests).
+-module(ksha3_tests).
 
 -include_lib("eunit/include/eunit.hrl").
 
 test_hash(Bits, [Len, Msg, Md]) when Len > 0 ->
     {ok, Digest} = case Len rem 8 of
-        0 -> sha3:hash(Bits, hex:hexstr_to_bin(Msg));
-        _ -> sha3:hash(Bits, hex:hexstr_to_bin(Msg), Len)
+        0 -> ksha3:hash(Bits, hex2bin:hexstr_to_bin(Msg));
+        _ -> ksha3:hash(Bits, hex2bin:hexstr_to_bin(Msg), Len)
     end,
-    ?assertEqual(Md, string:to_upper(hex:bin_to_hexstr(Digest)));
+    ?assertEqual(Md, string:to_upper(hex2bin:bin_to_hexstr(Digest)));
 
 test_hash(Bits, [Len, Msg, Md]) ->
-    {ok, Digest} = sha3:hash(Bits, hex:hexstr_to_bin(Msg), Len),
-    ?assertEqual(Md, string:to_upper(hex:bin_to_hexstr(Digest))).
+    {ok, Digest} = ksha3:hash(Bits, hex2bin:hexstr_to_bin(Msg), Len),
+    ?assertEqual(Md, string:to_upper(hex2bin:bin_to_hexstr(Digest))).
 
 test_lifecycle(Bits, [Len, Msg, Md]) when Len > 8 ->
-    {ok, State} = sha3:init(Bits),
-    <<Bin1:8/bitstring, Bin2/bitstring>> = hex:hexstr_to_bin(Msg),
-    {ok, State} = sha3:update(State, Bin1, 8),
-    {ok, State} = sha3:update(State, Bin2, Len - 8),
-    {ok, Digest} = sha3:final(State),
-    ?assertEqual(Md, string:to_upper(hex:bin_to_hexstr(Digest)));
+    {ok, State} = ksha3:init(Bits),
+    <<Bin1:8/bitstring, Bin2/bitstring>> = hex2bin:hexstr_to_bin(Msg),
+    {ok, State} = ksha3:update(State, Bin1, 8),
+    {ok, State} = ksha3:update(State, Bin2, Len - 8),
+    {ok, Digest} = ksha3:final(State),
+    ?assertEqual(Md, string:to_upper(hex2bin:bin_to_hexstr(Digest)));
 
 test_lifecycle(Bits, [Len, Msg, Md]) ->
-    {ok, State} = sha3:init(Bits),
-    {ok, State} = sha3:update(State, hex:hexstr_to_bin(Msg), Len),
-    {ok, Digest} = sha3:final(State),
-    ?assertEqual(Md, string:to_upper(hex:bin_to_hexstr(Digest))).
+    {ok, State} = ksha3:init(Bits),
+    {ok, State} = ksha3:update(State, hex2bin:hexstr_to_bin(Msg), Len),
+    {ok, Digest} = ksha3:final(State),
+    ?assertEqual(Md, string:to_upper(hex2bin:bin_to_hexstr(Digest))).
 
 parse_triples(Lines) ->
     parse_triples(Lines, []).
@@ -40,7 +40,7 @@ parse_triples([Len, Msg, Md|Lines], Acc) ->
 
 msgkat(Set, Bits, Fun) ->
     {ok, Cwd} = file:get_cwd(),
-    Filename = filename:join([Cwd, "..", "test", "data", Set ++ "MsgKAT.zip"]),
+    Filename = filename:join([Cwd, "test", "data", Set ++ "MsgKAT.zip"]),
     {ok, ZipHandle} = zip:zip_open(Filename, [memory]),
     {ok, {_, Data}} = zip:zip_get(Set ++ "MsgKAT_" ++ integer_to_list(Bits) ++ ".txt", ZipHandle),
     Lines = lists:filter(
