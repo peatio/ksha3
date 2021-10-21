@@ -28,18 +28,18 @@ init() ->
 
 -spec init(non_neg_integer()) -> {ok, binary()} | {error, atom()}.
 init(_Bits) ->
-    "NIF library not loaded".
+    erlang:nif_error({error, not_loaded}).
 
 -spec update(binary(), binary()) -> {ok, binary()} | {error, atom()}.
 update(State, Data) -> update(State, Data, bit_size(Data)).
 
 -spec update(binary(), binary(), non_neg_integer()) -> {ok, binary()} | {error, atom()}.
 update(_State, _Data, _BitLength) ->
-    "NIF library not loaded".
+    erlang:nif_error({error, not_loaded}).
 
 -spec final(binary()) -> {ok, binary()} | {error, atom()}.
 final(_State) ->
-    "NIF library not loaded".
+    erlang:nif_error({error, not_loaded}).
 
 hexhash(Bits, Data) ->
   {ok, Hash} = hash(Bits, Data, bit_size(Data)),
@@ -50,4 +50,4 @@ hash(Bits, Data) -> hash(Bits, Data, bit_size(Data)).
 
 -spec hash(non_neg_integer(), binary(), non_neg_integer()) -> {ok, binary()} | {error, atom()}.
 hash(_Bits, _Data, _BitLength) ->
-    "NIF library not loaded".
+    erlang:nif_error({error, not_loaded}).
