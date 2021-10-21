@@ -1,5 +1,7 @@
 c_src/*.o
+*.d
 c_src/*/*.o
 .eunit
 priv/*.so
 _build
+rebar3
